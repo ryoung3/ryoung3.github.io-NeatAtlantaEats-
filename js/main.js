@@ -1,9 +1,7 @@
 /*    Neighborhood Map
-
-Insert a search term and an address, and it will return a list of search items
+Insert a search term and it will return a list of search items
 puts them on the map and on the side menu.
-
-This uses NPM, Knockout.js, jquery, bootstrap, Google Maps API and Yelp API.  */
+NPM, Knockout.js, jquery, bootstrap, Google Maps API and Yelp API helped make this project possible.  */
 
 //set whole script to be strict
 'use strict';
