@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+        <title>Neat Atlanta Eats</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <meta charset="utf-8">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="css/styles.css" rel="stylesheet" media="screen">
+
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHwIa1zuHzVqpAnVEj_rDQLXZGJKicb4w"></script>
+
+        <script src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+        <script src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                   
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <form id="search" class="nav navbar-nav navbar-form navbar-left">
+                        <input type="text" id='foodSearch' placeholder="Hungry..." class="form-control">
+                        <input data-bind="click: search" data-toggle="collapse" data-target="#navbar" id="search-btn" type="button" class="btn btn-primary pull-right" value="Search">
+                    </form>
+                     <p id="nav" class="navbar-brand" style="float: right;">
+                        Neat Atlanta Eats ! 
+                    </p>
+                </div>                
+            </div>
+        </nav>
+        <div id="body" class="container">
+            <div class="row">
+                <div id="map-canvas" class="col-xs-9"></div>
+                <div id="sidemenu" class="col-md-3">
+                    <div id="menu-contents" class="row">
+                        <div class="col-xs-12">
+                            
+                            <h3 align='center'>Search Results</h3>
+                            <div data-bind="foreach: listings" class="col-xs-12">
+                                <div data-bind="event: { mouseover: show, mouseout: hide }" style="color:black;" class="thumbnail"> 
+                                  <img data-bind="attr: { src: image_url }" src="" alt="image">
+                                  <h4><a data-bind="attr: { href: url}, text: name"></a></h4>
+                                  <img data-bind="attr: { src: rating_url }" class="rating" src="" alt="rating">
+                                  <li data-bind="text: location"></li>
+                                  <li data-bind="text: display_phone"></li>
+                                  <p data-bind="text: snippet_text"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
+        <script src="js/main.js"></script>
+        <script>
+            //If you click on the search
+           var openMenu = function() {
+                
+                $("#sidemenu").animate({left:'0px'}, {queue: false, duration: 800});
+            };
+             //If you hit the search button, the results will open but not close.
+            $("#search-btn").click(function() {
+                openMenu();
+            });
+        </script>
+    </body>
+</html>
