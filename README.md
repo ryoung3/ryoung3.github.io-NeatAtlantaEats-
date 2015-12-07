@@ -1,15 +1,10 @@
-## Find ___ Near ___
+Neat Atlanta Eats!
 
-- Udacity Frontend Nanodegree Project 5, Neighborhood Map
-  By Justin Murdock
+Udacity Frontend Nanodegree Project 5, Neighborhood Map By Ronique Young
+HOW TO RUN:
 
-TO RUN:
+View the demo here, or clone the repo onto your computer and open index.html. Are you hungry for burgers, cupcakes, or shrimp ? Just enter the food you're craving, hit the search button & watch as a list of local restaurants,bars, dine-ins & diners will appear within the Atlanta area that's sure to satisify your appetite.
 
-View the demo [here](http://juliusakula.github.io/project-5), or clone the repo onto your computer and open index.html.
-Think of something to search for and type it in "Keyword" input field at the top of the page (in the navigation bar), and enter the address or city in the "Near:" box.
+You can put your mouse over the thumbnail and the location will bounce on the map. Click on the marker to see the name and address of the marker.
 
-Click search. A menu will open on the right with your search results.
-
-Put your mouse over the thumbnail and the location will bounce on the map.
-
-Click on the marker to see the name and address of the marker.
+This project utilizes KnockoutJs, Yelp API, & Google Maps API in addition to HTML5, CSS3, JavaScript & Jquery.
