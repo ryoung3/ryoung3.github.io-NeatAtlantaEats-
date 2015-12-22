@@ -1,140 +1,13 @@
-/*    Neighborhood Map
-Insert a search term and it will return a list of search items
-puts them on the map and on the side menu.
-  */
-
-//set whole script to be strict
-'use strict';
-
-//sets cache for true so Timestamp parameter isn't added to ajax query.
-$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
-    if ( options.dataType == 'jsonp' || originalOptions.dataType == 'jsonp' ) {
-        options.cache = true;
-    }
-});
-
-//init globals
-var map;
-var markers = [];
-
-//make Markers functions - clear, show, add, make
-
-var clearMarkers = function() {
-    setAllMap( null );
-    markers = [];
-};
-var showMarkers = function() {
-    setAllMap( map );
-};
-var setAllMap = function( map ) {
-    var len = markers.length;
-    for (var i = 0; i < len; i++){
-        markers[i].setMap( map );
-    }
-};
-var addMarker = function( marker ) {
-    markers.push( marker );
-};
-var makeMarker = function( coords, info ) {
-    var myLatLng = new google.maps.LatLng( coords.latitude, coords.longitude );
-    var infowindow = new google.maps.InfoWindow({
-        content: info
-    });
-    var marker = new google.maps.Marker({
-        position: myLatLng,
-        animation: google.maps.Animation.DROP
-    });
-    google.maps.event.addListener(marker, 'mouseover', function() {
-        infowindow.open(map, marker);
-    });
-    google.maps.event.addListener(marker, 'mouseout', function() {
-        infowindow.close(map, marker);
-    });
-    return marker;
-};
-var bounce = function( marker ) {
-    marker.setAnimation( google.maps.Animation.BOUNCE );
-};
-var stopBounce = function( marker ) {
-    marker.setAnimation( null );
-};
-
-
-//Listing model
-var Listing = function( data ) {
-    this.display_phone = ko.observable( data.display_phone );
-    this.image_url = ko.observable( data.image_url );
-    this.location = ko.observable( data.location.address[0] );
-    this.name = ko.observable( data.name );
-    this.rating = ko.observable( data.rating );
-    this.rating_url = ko.observable( data.rating_img_url );
-    this.url = ko.observable( data.url );
-    this.snippet_text = ko.observable( data.snippet_text );
-    this.review_count = ko.observable( data.review_count );
-    this.marker = makeMarker( data.location.coordinate, data.name + "<br>" + data.location.address[0] );
-    addMarker( this.marker );
-    //animates marker when mouseover Div
-    this.show = function() {
-        bounce(this.marker);
-    };
-    this.hide = function() {
-        stopBounce(this.marker);
-    };
-};
-
-var ViewModel = function() {
+//---View Model---
+function myViewModel() {
     var self = this;
-    this.listings = ko.observableArray([]);
-    var geocoder;
-    var latlng;
-
-    //loads map
-    var initialize = function() {
-        var lat = 33.7550;
-        var lng = -84.3900;
-        //if geolocation is avail, set map to current position
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position){
-                lat = position.coords.latitude;
-                lng = position.coords.longitude;
-            }, function(error){
-                console.log("Error: " + error.message);
-            });
-        }
-        latlng = new google.maps.LatLng( lat, lng );//sets to Atlanta, Georgia by default
-        var mapOptions = {
-          zoom: 12,
-          center: latlng
-        };
-        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-    };
-    google.maps.event.addDomListener(window, 'load', initialize);
-
-    //search handler function
-    this.search = function() {
-        var counter = 0;
-        var address = "Atlanta, Georgia";
-        var terms = $("#foodSearch").val();
-        moveMap(address);
-        yelp(terms,address);
-    };
-
-    //moves map to location
-    var moveMap = function(address) {
-        geocoder = new google.maps.Geocoder();
-        geocoder.geocode( { 'address': address}, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-            map.setCenter(results[0].geometry.location);
-          } else {
-              console.log('Geocode was not successful for the following reason: ' + status);
-          }
-        });
-    };
-
-    //queries yelp api with term and location, returns jsonp with results
-    var yelp = function(terms, location){
+    
+    //Calls the Yelp API.
+    self.yelpCall = function(searchNear, searchFor) {
+    // For use for this class only.
+    // You wouldn't actually want to expose your secrets like this in a real application.
         var auth = {
-            consumerKey : "Mn1Aj3R5cQKlwZveqnu8CQ",
+             consumerKey : "Mn1Aj3R5cQKlwZveqnu8CQ",
             consumerSecret : "DJWBTfFhvkUeznJE_q3RkLrLJnQ",
             accessToken : "YLBx5vt_-2kf_2WXz6wiqM8qbL6I8R0C",
             accessTokenSecret : "brBVqrs758RW5TDlRrs-7KlOZDQ",
@@ -142,49 +15,139 @@ var ViewModel = function() {
                 signatureMethod : "HMAC-SHA1"
             }
         };
+    
+        //Creates a variable for the OAuth.SignatureMethod
         var accessor = {
             consumerSecret : auth.consumerSecret,
             tokenSecret : auth.accessTokenSecret
         };
+    
         var parameters = [];
-        parameters.push(['term', terms]);
-        parameters.push(['location', location]);
+        parameters.push(['term', searchFor]);
+        parameters.push(['location', searchNear]);
         parameters.push(['callback', 'cb']);
         parameters.push(['oauth_consumer_key', auth.consumerKey]);
         parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
         parameters.push(['oauth_token', auth.accessToken]);
         parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
+    
         var message = {
             'action' : 'http://api.yelp.com/v2/search',
             'method' : 'GET',
             'parameters' : parameters
         };
+    
         OAuth.setTimestampAndNonce(message);
         OAuth.SignatureMethod.sign(message, accessor);
+    
         var parameterMap = OAuth.getParameterMap(message.parameters);
-        $.ajax({
-            'url' : message.action,
-            'data' : parameterMap,
-            'dataType' : 'jsonp',
-            'cached' : true,
-            'jsonpCallback' : 'cb',
-            //empties listings array, then pushes in new results
-            'success' : function(data, textStats, XMLHttpRequest) {
-                clearMarkers();
-                self.listings.removeAll();
-                console.log(data);
-                var len = data.businesses.length;
-                for (var i = 0; i < len; i++){
-                    self.listings.push(new Listing(data.businesses[i]));
+        
+        self.settings = function(url, ydata){
+            $.ajax({
+                'url' : url,
+                'data' : ydata,
+                'dataType' : 'jsonp',
+                'global' : true,
+                'jsonpCallback' : 'cb',
+                'success' : function(data){
+                    self.makeYelpList(data);
+                },
+                'timeout': 5000,
+                'error' : function (data, t) {
+                    if(t==='timeout'){
+                        alert("An error has occured!");
+                    }   
                 }
-                console.log(self.listings());
-                showMarkers();
-            }
-        }).fail(function(e) {
-            console.log('something went wrong: ');
-            console.log(e.error());
+            });
+        };
+        
+        self.settings(message.action, parameterMap);
+    };
+    
+    //Creates Google map
+    
+    
+    self.AtlantaLngLat = new google.maps.LatLng(33.7550,  -84.3900); 
+    
+    self.initialize = function() {
+        var mapOptions = {
+            zoom: 12,
+            center: self.AtlantaLngLat,
+            
+            };
+        self.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+       
+    }
+    
+    self.initialize();  
+    //End Map Creation
+    
+    self.markers = ko.observableArray([]);  
+    
+    //Yelp List and Marker Generation
+    self.makeYelpList = function(data) {
+        $.each(data.businesses, function(key, business) {
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(business.location.coordinate.latitude, business.location.coordinate.longitude),
+                map: self.map,
+                listVisible: ko.observable(true),
+                animation: google.maps.Animation.DROP,
+                name: business.name,
+                address: business.location.address,
+                image: business.image_url,
+                stars: business.rating_img_url,
+                phone: business.display_phone,
+                numRev: business.review_count + ' Reviews'
+            });
+                        
+            var contentString = '<div class="info_content"><h4>' + business.name + '</h4><p class="review"><img src="' + business.snippet_image_url + '">' + business.snippet_text + '</p></div>';;
+            self.infowindow = new google.maps.InfoWindow();
+            google.maps.event.addListener(marker, 'click', function() {
+                self.map.panTo(marker.getPosition());
+                self.infowindow.setContent(contentString);
+                self.infowindow.open(self.map, this);
+                if (marker.getAnimation() !== null) {
+                    marker.setAnimation(null);
+                } else {
+                    marker.setAnimation(google.maps.Animation.BOUNCE);
+                }
+                setTimeout(function(){ marker.setAnimation(null); }, 1500);
+                    
+            });
+
+            self.markers.push(marker);
+        });
+        
+        google.maps.event.addListener(self.infowindow,'closeclick', function() {
+            self.reset();
+        });
+        self.setActiveLocation = function(marker) {
+            google.maps.event.trigger(marker, 'click');
+        };
+    };
+    
+    self.reset = function() {
+        self.map.panTo(self.AtlantaLngLat);
+        self.map.setZoom(12);
+    };
+    
+    //Calls the Yelp function to init map
+    self.yelpCall('48180', 'diners');
+    
+    self.searchWord = ko.observable("");
+    self.searchWordSearch = ko.computed( function() {
+        return self.searchWord().toLowerCase().split(' ');
+    });
+    
+    self.searchSubmit = function() {
+        self.searchWordSearch().forEach(function(word) {
+            self.markers().forEach(function(marker) {
+                var name = marker.name.toLowerCase();
+                (name.indexOf(word) === -1) ? marker.setMap(null) : marker.setMap(self.map);
+                (name.indexOf(word) === -1) ? marker.listVisible(false) : marker.listVisible(true);
+            });
         });
     };
-};
+}
 
-ko.applyBindings(new ViewModel());
+//Calls Knockout
