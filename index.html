@@ -22,6 +22,7 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
+
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
@@ -31,8 +32,10 @@
                    
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
-                    <form id="search" class="nav navbar-nav navbar-form navbar-left">
-                        <input type="text" id='foodSearch' placeholder="Hungry..." class="form-control">
+
+                    <form id="search" data-bind="submit: searchSubmit" class="nav navbar-nav navbar-form navbar-left">
+
+                        <input class = "form-control" data-bind="value: searchWord, valueUpdate: 'afterkeydown', event: {keyup: searchSubmit}" placeholder="Hungry...">
                         <input data-bind="click: search" data-toggle="collapse" data-target="#navbar" id="search-btn" type="button" class="btn btn-primary pull-right" value="Search">
                     </form>
                      <p id="nav" class="navbar-brand" style="float: right;">
@@ -67,16 +70,6 @@
         <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
         <script src="js/main.js"></script>
-        <script>
-            //If you click on the search
-           var openMenu = function() {
-                
-                $("#sidemenu").animate({left:'0px'}, {queue: false, duration: 800});
-            };
-             //If you hit the search button, the results will open but not close.
-            $("#search-btn").click(function() {
-                openMenu();
-            });
-        </script>
+        
     </body>
 </html>
