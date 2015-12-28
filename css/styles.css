@@ -66,7 +66,7 @@ html, body {
 }
 #sidemenu {
   position: absolute;
-  left: -235px;
+  left: 0px;
   background-color: black;
   width: 240px;
   background-color: #FFA500;
