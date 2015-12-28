@@ -13,16 +13,28 @@ $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
     }
 });
 
+
+
+var ViewModel = function() {
+    var self = this;
+    this.listings = ko.observableArray([]);
+     self.searchWord = ko.observable("");
+    var geocoder;
+    var latlng;
+    var address = "Atlanta, Georgia";
+    var terms = "diners";
+
 //init globals
 var map;
 var markers = [];
 
 //make Markers functions - clear, show, add, make
 
-var clearMarkers = function() {
+ var clearMarkers = function() {
     setAllMap( null );
     markers = [];
 };
+
 var showMarkers = function() {
     setAllMap( map );
 };
@@ -42,11 +54,15 @@ var makeMarker = function( coords, info ) {
     });
     var marker = new google.maps.Marker({
         position: myLatLng,
+        map: map,
         animation: google.maps.Animation.DROP
+     //   console.log("Inside of marker");
     });
+    
+
     google.maps.event.addListener(marker, 'mouseover', function() {
         infowindow.open(map, marker);
-    });
+    }); 
     google.maps.event.addListener(marker, 'mouseout', function() {
         infowindow.close(map, marker);
     });
@@ -82,54 +98,52 @@ var Listing = function( data ) {
     };
 };
 
-var ViewModel = function() {
-    var self = this;
-    this.listings = ko.observableArray([]);
-    var geocoder;
-    var latlng;
+    
+    self.searchWordSearch = ko.computed( function() {
+        return self.searchWord().toLowerCase().split(' ');
+    });
+    
+    self.searchSubmit = function() {
+        self.searchWordSearch().forEach(function(word) {
+            this.listings().forEach(function(listing) {
+                var name = listing.name.toLowerCase();
+                (name.indexOf(word) === -1) ? marker.setMap(null) : marker.setMap(self.map);
+                (name.indexOf(word) === -1) ? marker.listVisible(false) : marker.listVisible(true);
+            });
+        });
+    };
+
+
 
     //loads map
     var initialize = function() {
         var lat = 33.7550;
         var lng = -84.3900;
-        //if geolocation is avail, set map to current position
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position){
-                lat = position.coords.latitude;
-                lng = position.coords.longitude;
-            }, function(error){
-                console.log("Error: " + error.message);
-            });
-        }
+       
         latlng = new google.maps.LatLng( lat, lng );//sets to Atlanta, Georgia by default
         var mapOptions = {
           zoom: 12,
           center: latlng
         };
+        yelp(terms,address);
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     };
+   
     google.maps.event.addDomListener(window, 'load', initialize);
-
     //search handler function
-    this.search = function() {
-        var counter = 0;
-        var address = "Atlanta, Georgia";
-        var terms = $("#foodSearch").val();
-        moveMap(address);
-        yelp(terms,address);
-    };
+       
 
     //moves map to location
-    var moveMap = function(address) {
+/*    var moveMap = function(address) {
         geocoder = new google.maps.Geocoder();
         geocoder.geocode( { 'address': address}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
           } else {
-              console.log('Geocode was not successful for the following reason: ' + status);
+              alert('Geocode was not successful for the following reason: ' + status);
           }
         });
-    };
+    };   */
 
     //queries yelp api with term and location, returns jsonp with results
     var yelp = function(terms, location){
@@ -170,8 +184,8 @@ var ViewModel = function() {
             'jsonpCallback' : 'cb',
             //empties listings array, then pushes in new results
             'success' : function(data, textStats, XMLHttpRequest) {
-                clearMarkers();
-                self.listings.removeAll();
+            //    clearMarkers();
+            //    self.listings.removeAll();
                 console.log(data);
                 var len = data.businesses.length;
                 for (var i = 0; i < len; i++){
@@ -181,10 +195,20 @@ var ViewModel = function() {
                 showMarkers();
             }
         }).fail(function(e) {
-            console.log('something went wrong: ');
-            console.log(e.error());
+            alert('something went wrong: ');
+            alert(e.error());
         });
     };
+
+
+        
+        
+     //   moveMap(address);
+     //   yelp(terms,address);
+
+
+
+         
 };
 
 ko.applyBindings(new ViewModel());
