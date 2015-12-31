@@ -1,27 +1,68 @@
-@media screen and (max-width: 767px) {
-    #search {
-        margin-top: 0px;
-    }
-    #search-btn {
-        margin-top: 15px;
-    }
-    #navbar {
-        border: 0px;
-    }
+
+body,html,#map-canvas {
+  margin: 0;
 }
-@media screen and (min-width: 768px) {
-    #search-btn {
-        margin-left: 20px;
-    }
+
+#map-canvas {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.yelp-list ul,.search-yelp {
+  position: fixed;
+  top: 0;
+  left: 0;
+  max-width: 27em;
+  background-color: rgba(255,255,255,0.85);
+}
+
+@media (max-width: 500px) {
+.yelp-list ul {width:50%}
+.search-yelp{width:100%}
+.yelp-list ul li h4{font-size:18px}
+.yelp-list ul li p{font-size:14px}
 }
 
 
-body {
-    overflow: hidden;
+
+
+.yelp-list ul {
+  padding: 0;
+  height: 100%;
+  left: 0px;
+  width: 320px;
+  overflow-y: auto;
+  z-index: 9;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  font-family:"Pacifico", sans-serif;
+  margin-top: 4.35em;
+  margin-right: 0;
+  background-color: #FFA500;
 }
 
-.hidden {
-    display: none;
+.yelp-list ul li {
+  list-style: none;
+  margin: 0;
+  border-top: 1px solid darkgray;
+}
+
+.yelp-list ul li:first-child {
+  border-top: 0;
+}
+.yelp-list ul li:hover {
+  background-color: lightblue;
+}
+
+.yelp-list ul li.active {
+  background-color: lightcyan;
 }
 
 .navbar {
@@ -30,54 +71,57 @@ body {
     margin:0px 0px 0px 0px;
     border:0px;
     border-radius: 0px;
-     
+     font-family:"Pacifico", sans-serif;
     
 }
-.rating {
-    margin: 0px;
+.search-yelp {
+  padding: 1em;
+  z-index: 10;
 }
-.thumbnail {
-    text-align: center;
+.search-yelp small {
+  display: block;
+  text-align: right;
+  margin-top: 10px;
+  color: #ff4e00;
+  cursor: pointer;
 }
-#nav {
-    color: white;
-}
-p {
-  margin-top: 5px;
-}
-li {
-    list-style-type: none;
-}
-html, body {
-    font-family: 'Pacifico', cursive;
-    font-weight: 400;
-    margin:0px 0px 0px 0px;
-    height: 100%;
+.search-yelp small:hover {
+  text-decoration:underline;
 }
 
-.container {
-  position: absolute;
-  width: 100%;
-  height: -webkit-calc(100% - 60px);
-  margin: 0px 0px 0px 0px;
-}
-.row{
-  height: 100%;
-}
-#sidemenu {
-  position: absolute;
-  left: 0px;
-  background-color: black;
-  width: 240px;
-  background-color: #FFA500;
-  color: white;
-  height: 95%;
-  overflow: auto;
-  opacity: 0.9;
-    filter: alpha(opacity=90);
+.img-container img {
+  max-width:100%;
+  height: auto;
+  display: block;
+  margin-top: 1em;
+  margin-left: auto;
+    margin-right: auto;
 }
 
-#map-canvas{
-  height: 100%;
-  width: -webkit-calc(100%)
+.info_content {
+  max-width: 18em;
+  color: midnightblue;
+}
+
+.info_content .review {
+  position: relative;
+  padding-top: 1em;
+  border-top: 2px dashed #191970;
+}
+.info_content .review img {
+  float: right;
+  display: inline-block;
+  max-width: 50px;
+  margin-left: 1em;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+.info_content .review:after {
+  content:"Yelp Review";
+  display: inline-block;
+  font-size: 1em;
+  float: right;
 }
