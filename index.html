@@ -13,13 +13,14 @@
 
         <script src="node_modules/jquery/dist/jquery.min.js"></script>
 
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHwIa1zuHzVqpAnVEj_rDQLXZGJKicb4w"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHwIa1zuHzVqpAnVEj_rDQLXZGJKicb4w" async defer></script>
 
         <script src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
         <script src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
     </head>
     <body>
-        <nav class="navbar navbar-default">
+     <div class="yelp-list">
+                  <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
 
@@ -44,32 +45,30 @@
                 </div>                
             </div>
         </nav>
-        <div id="body" class="container">
-            <div class="row">
-                <div id="map-canvas" class="col-xs-9"></div>
-                <div id="sidemenu" class="col-md-3">
-                    <div id="menu-contents" class="row">
-                        <div class="col-xs-12">
+
+            
+            <ul data-bind="foreach: markers">
+                <li data-bind="visible: listVisible, click: $parent.setActiveLocation">
+                    <div class="heading row">
+                        <p class="col-sm-6 img-container">
+                            <img data-bind="attr:{src: image}" alt="Yelp Rating">
+                            <img data-bind="attr:{src: stars}" alt="Yelp Rating">
+                            <h4 data-bind="text: name"></h4>
+                            <span data-bind="text: address"></span>
+                            <p><strong data-bind="text: phone"></strong></p>
+                            <p data-bind="text: numRev"></p>
                             
-                            <h3 align='center'>Search Results</h3>
-                            <div data-bind="foreach: listings" class="col-xs-12">
-                                <div data-bind="event: { mouseover: show, mouseout: hide }" style="color:black;" class="thumbnail"> 
-                                  <img data-bind="attr: { src: image_url }" src="" alt="image">
-                                  <h4><a data-bind="attr: { href: url}, text: name"></a></h4>
-                                  <img data-bind="attr: { src: rating_url }" class="rating" src="" alt="rating">
-                                  <li data-bind="text: location"></li>
-                                  <li data-bind="text: display_phone"></li>
-                                  <p data-bind="text: snippet_text"></p>
-                                </div>
-                            </div>
-                        </div>
+                        </p>
                     </div>
-                </div>
-            </div>
-        </div>
+                </li>
+            </ul>
+        
+    </div>
+            
+        <div id="map-canvas"></div>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
         <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
         <script src="js/main.js"></script>
         
     </body>
-</html>
