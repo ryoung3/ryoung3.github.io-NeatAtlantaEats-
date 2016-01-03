@@ -1,5 +1,23 @@
 
 'use strict';
+
+//Creates Google map
+
+ var map;  
+    
+    function initialize() {
+        var mapOptions = {
+            zoom: 12,
+            center: {lat: 33.7550, lng: -84.3900},  // Starting Point is Atlanta, GA
+            disableDefaultUI: true
+            };
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+      
+      
+    };
+
+
+
 //---View Model---
 function myViewModel() {
     var self = this;
@@ -58,6 +76,9 @@ function myViewModel() {
                 'error' : function (data, t) {
                     if(t==='timeout'){
                         alert("An error has occured!");
+                    }
+                    else{
+
                     }   
                 }
             });
@@ -66,25 +87,10 @@ function myViewModel() {
         
     };
     
-    //Creates Google map
-       
-    self.ATLlatlng = new google.maps.LatLng(33.7550,  -84.3900); //Starting Point is Atlanta, GA
+    
+    
+
    
-    
-    self.initialize = function() {
-        var mapOptions = {
-            zoom: 12,
-            center: self.ATLlatlng,
-            disableDefaultUI: true
-            };
-        self.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-      
-      
-    }
-    
-    self.initialize();  
-    //End Map Creation
-    
     self.markers = ko.observableArray([]);  
     
     //Yelp List and Marker Generation
@@ -103,7 +109,7 @@ function myViewModel() {
                 numRev: business.review_count + ' Reviews'
             });
                         
-            var contentString = '<div class="info_content"><h4>' + business.name + '</h4><p class="review"><img src="' + business.snippet_image_url + '">' + business.snippet_text + '</p></div>';;
+            var contentString = '<div class="info_content"><h4>' + business.name + '</h4><p class="review"><img src="' + business.snippet_image_url + '">' + business.snippet_text + '</p></div>';
             self.infowindow = new google.maps.InfoWindow();
             google.maps.event.addListener(marker, 'click', function() {
                 self.map.panTo(marker.getPosition());
@@ -151,7 +157,17 @@ function myViewModel() {
             });
         });
     };
+
+ 
 }
 
-//Calls Knockout
+ 
+
+function initMap(){
+
+initialize();
 ko.applyBindings(new myViewModel());
+}
+
+
+//Calls Knockout
