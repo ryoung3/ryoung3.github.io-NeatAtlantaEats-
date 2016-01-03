@@ -25,6 +25,12 @@ body,html,#map-canvas {
 }
 
 
+@media screen and (max-width: 600px) {
+  #sidemenu {
+    visibility: hidden;
+   
+  }
+}
 
 
 .yelp-list ul {
