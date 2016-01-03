@@ -2,24 +2,25 @@
 'use strict';
 
 //Creates Google map
-
+       
+   // var ATLlatlng = new google.maps.LatLng(33.7550,  -84.3900); //Starting Point is Atlanta, GA
  var map;  
     
-    function initialize() {
-        var mapOptions = {
+function initialize() {
+    var mapOptions = {
             zoom: 12,
-            center: {lat: 33.7550, lng: -84.3900},  // Starting Point is Atlanta, GA
+            center: {lat: 33.7550, lng: -84.3900},
             disableDefaultUI: true
             };
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
       
       
-    };
+}
 
 
 
 //---View Model---
-function myViewModel() {
+function MyViewModel() {
     var self = this;
     
     //Calls the Yelp API.
@@ -65,6 +66,7 @@ function myViewModel() {
         
             $.ajax({
                 'url' : message.action,
+                'cache' : true,
                 'data' : parameterMap,
                 'dataType' : 'jsonp',
                 'global' : true,
@@ -91,6 +93,9 @@ function myViewModel() {
     
 
    
+    //self.initialize();  
+    //End Map Creation
+    
     self.markers = ko.observableArray([]);  
     
     //Yelp List and Marker Generation
@@ -98,7 +103,7 @@ function myViewModel() {
         $.each(data.businesses, function(key, business) {
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(business.location.coordinate.latitude, business.location.coordinate.longitude),
-                map: self.map,
+                map: map,
                 listVisible: ko.observable(true),
                 animation: google.maps.Animation.DROP,
                 name: business.name,
@@ -112,9 +117,9 @@ function myViewModel() {
             var contentString = '<div class="info_content"><h4>' + business.name + '</h4><p class="review"><img src="' + business.snippet_image_url + '">' + business.snippet_text + '</p></div>';
             self.infowindow = new google.maps.InfoWindow();
             google.maps.event.addListener(marker, 'click', function() {
-                self.map.panTo(marker.getPosition());
+                map.panTo(marker.getPosition());
                 self.infowindow.setContent(contentString);
-                self.infowindow.open(self.map, this);
+                self.infowindow.open(map, this);
                 if (marker.getAnimation() !== null) {
                     marker.setAnimation(null);
                 } else {
@@ -136,8 +141,8 @@ function myViewModel() {
     };
     
     self.reset = function() {
-        self.map.panTo(self.ATLlatlng);
-        self.map.setZoom(12);
+        map.panTo(self.ATLlatlng);
+        map.setZoom(12);
     };
     
     //Calls the Yelp function to init map
@@ -152,7 +157,7 @@ function myViewModel() {
         self.searchWordSearch().forEach(function(word) {
             self.markers().forEach(function(marker) {
                 var name = marker.name.toLowerCase();
-                (name.indexOf(word) === -1) ? marker.setMap(null) : marker.setMap(self.map);
+                (name.indexOf(word) === -1) ? marker.setMap(null) : marker.setMap(map);
                 (name.indexOf(word) === -1) ? marker.listVisible(false) : marker.listVisible(true);
             });
         });
@@ -162,12 +167,11 @@ function myViewModel() {
 }
 
  
-
+//Calls Initialize to build the map & Knockout 
 function initMap(){
-
-initialize();
-ko.applyBindings(new myViewModel());
+    initialize();
+    ko.applyBindings(new MyViewModel());
 }
 
 
-//Calls Knockout
+
