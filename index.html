@@ -10,10 +10,10 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="css/styles.css" rel="stylesheet" media="screen">
-
-        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script src= "node_modules/jquery/dist/jquery-2.1.4.min.js"></script>
+     <!--   <script src="node_modules/jquery/dist/jquery-1.11.3.min.js"></script> -->
          <!-- <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initialize" onerror="googleError()"></script> -->
-       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHwIa1zuHzVqpAnVEj_rDQLXZGJKicb4w"></script>
+       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHwIa1zuHzVqpAnVEj_rDQLXZGJKicb4w&callback=initMap" async defer></script>
         <script src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
         <script src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
     </head>
@@ -45,7 +45,7 @@
             </div>
         </nav>
 
-            
+            <div id="sidemenu">
             <ul data-bind="foreach: markers">
                 <li data-bind="visible: listVisible, click: $parent.setActiveLocation">
                     <div class="heading row">
@@ -61,11 +61,11 @@
                     </div>
                 </li>
             </ul>
-        
+        </div>
     </div>
             
         <div id="map-canvas"></div>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
         <script src="js/main.js"></script>
