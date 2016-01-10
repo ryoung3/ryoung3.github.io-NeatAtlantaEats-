@@ -167,11 +167,11 @@ function MyViewModel() {
 }
 
  
-//Calls Initialize to build the map & Knockout 
+
 function initMap(){
     initialize();
     ko.applyBindings(new MyViewModel());
 }
 
 
-
+//Calls Knockout
