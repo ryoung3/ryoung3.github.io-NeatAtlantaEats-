@@ -31,7 +31,9 @@ body,html,#map-canvas {
 }
 
 @media (max-width: 500px) {
-
+ #nav2{
+  display: initial;
+}
   #nav{
     display: none;
   }
