@@ -9,7 +9,7 @@ body,html,#map-canvas {
   width: 100%;
 }
 
-.yelp-list ul,.search-yelp {
+.search-yelp {
   position: fixed;
   top: 0;
   left: 0;
@@ -17,26 +17,49 @@ body,html,#map-canvas {
   background-color: rgba(255,255,255,0.85);
 }
 
+.yelp-list ul{
+  position: fixed;
+ top: 0;
+  left: 0;
+  max-width: 27em;
+  background-color: rgba(255,255,255,0.85);
+
+
+}
+
 @media (max-width: 500px) {
-.yelp-list ul {width:50%}
+
+  #nav{
+    display: none;
+  }
+  
+.yelp-list ul {
+
+ height: 60%;
+    position: absolute;
+    margin-left: auto; 
+    margin-right: auto;
+        top: 65%;
+    width: initial;
+    height: 100px;
+     overflow-y: auto;
+    text-align: center;
+  
+  }
 .search-yelp{width:100%}
 .yelp-list ul li h4{font-size:18px}
 .yelp-list ul li p{font-size:14px}
+.yelp-list ul li img{display: none}
+
 }
 
 
-@media screen and (max-width: 600px) {
-  #sidemenu {
-    visibility: hidden;
-   
-  }
-}
+
 
 
 .yelp-list ul {
   padding: 0;
   height: 100%;
-  left: 0px;
   width: 320px;
   overflow-y: auto;
   z-index: 9;
@@ -52,6 +75,7 @@ body,html,#map-canvas {
   margin-top: 4.35em;
   margin-right: 0;
   background-color: #FFA500;
+
 }
 
 .yelp-list ul li {
