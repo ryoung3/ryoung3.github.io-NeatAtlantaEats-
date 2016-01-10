@@ -9,6 +9,9 @@ body,html,#map-canvas {
   width: 100%;
 }
 
+#nav2{
+  display:none;
+}
 .search-yelp {
   position: fixed;
   top: 0;
