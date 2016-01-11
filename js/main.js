@@ -3,7 +3,7 @@
 
 //Creates Google map
        
-   // var ATLlatlng = new google.maps.LatLng(33.7550,  -84.3900); //Starting Point is Atlanta, GA
+    var LATLNG; 
  var map;  
     
 function initialize() {
@@ -22,6 +22,7 @@ function initialize() {
 //---View Model---
 function MyViewModel() {
     var self = this;
+    LATLNG= new google.maps.LatLng(33.7550,  -84.3900); //Starting Point is Atlanta, GA
     
     //Calls the Yelp API.
     self.yelpCall = function(searchNear, searchFor) {
@@ -141,7 +142,7 @@ function MyViewModel() {
     };
     
     self.reset = function() {
-        map.panTo(self.ATLlatlng);
+        map.panTo(LATLNG);
         map.setZoom(12);
     };
     
@@ -166,7 +167,10 @@ function MyViewModel() {
  
 }
 
- 
+function googleError(){
+
+    alert("Google maps could not be loaded properly.Please see console for more details.");
+} 
 
 function initMap(){
     initialize();
